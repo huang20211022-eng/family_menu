@@ -1,30 +1,36 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:family_menu/main.dart';
+import 'package:family_menu/app.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('login page renders in English by default',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const FamilyMenuApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Family Menu'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('Sign In'), findsOneWidget);
+    expect(find.text('Create Account'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('language selector switches the UI to Simplified Chinese',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const FamilyMenuApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // English by default.
+    expect(find.text('Email'), findsOneWidget);
+
+    // Switch to Chinese.
+    await tester.tap(find.text('中文'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('邮箱'), findsOneWidget);
+    expect(find.text('密码'), findsOneWidget);
+    expect(find.text('登录'), findsOneWidget);
+    expect(find.text('注册账号'), findsOneWidget);
+    expect(find.text('Email'), findsNothing);
   });
 }

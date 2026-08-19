@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "appName": "Family Menu",
+  "appNameZh": "家庭菜单",
+  "tagline": "Your family's recipes, all in one place.",
+  "whatToEatToday": "What should we eat today?",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "signIn": "Sign In",
+  "createAccount": "Create Account",
+  "authComingSoon": "Authentication will be connected in the next phase.",
+  "registrationComingSoon": "Registration will be connected in the next phase."
+}

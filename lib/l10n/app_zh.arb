@@ -1,0 +1,13 @@
+{
+  "@@locale": "zh",
+  "appName": "Family Menu",
+  "appNameZh": "家庭菜单",
+  "tagline": "把家里的菜谱，都放在一个地方。",
+  "whatToEatToday": "今天吃什么？",
+  "emailLabel": "邮箱",
+  "passwordLabel": "密码",
+  "signIn": "登录",
+  "createAccount": "注册账号",
+  "authComingSoon": "登录功能将在下一阶段接入。",
+  "registrationComingSoon": "注册功能将在下一阶段接入。"
+}
