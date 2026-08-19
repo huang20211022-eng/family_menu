@@ -54,6 +54,11 @@ Supabase provides three services used by the app:
 - The Flutter client stores and refreshes the session locally so login persists
   across app restarts.
 - The authenticated user's `id` (UUID) is the ownership key for all data.
+- MVP sign-in uses **Email + Password** with email-link verification (preferred
+  over SMS).
+- "Forgot Password?" uses Supabase Auth's password-reset email flow.
+- Production requires a **Custom SMTP** provider; Supabase's built-in email
+  service is development/testing only.
 
 ### PostgreSQL
 

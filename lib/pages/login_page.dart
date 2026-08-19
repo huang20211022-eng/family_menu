@@ -20,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _obscurePassword = true;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -64,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(28),
                   ),
                   child: Icon(
-                    Icons.restaurant_menu,
+                    Icons.restaurant,
                     size: 44,
                     color: theme.colorScheme.onPrimaryContainer,
                   ),
@@ -119,16 +121,33 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
                 autofillHints: const [AutofillHints.password],
                 decoration: InputDecoration(
                   labelText: l10n.passwordLabel,
                   prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => _showComingSoon(l10n.passwordResetComingSoon),
+                  child: Text(l10n.forgotPassword),
+                ),
+              ),
+              const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => _showComingSoon(l10n.authComingSoon),
                 child: Text(l10n.signIn),

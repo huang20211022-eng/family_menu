@@ -40,4 +40,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get registrationComingSoon =>
       'Registration will be connected in the next phase.';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get passwordResetComingSoon =>
+      'Password reset will be available in the next authentication phase.';
 }

@@ -158,6 +158,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Registration will be connected in the next phase.'**
   String get registrationComingSoon;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @passwordResetComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset will be available in the next authentication phase.'**
+  String get passwordResetComingSoon;
 }
 
 class _AppLocalizationsDelegate

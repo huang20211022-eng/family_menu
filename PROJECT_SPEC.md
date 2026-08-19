@@ -33,6 +33,29 @@ The MVP delivers:
 - Persistent login session across app restarts.
 - Backed by Supabase Auth (planned).
 
+### Authentication Plan (planned)
+
+- **Auth provider:** Supabase Auth.
+- **MVP sign-in method:** Email + Password.
+- **Registration flow:** new users register and then complete email
+  verification.
+- **Verification channel:** the MVP prefers a verification **link** (email
+  confirmation) rather than an SMS code. Supabase Auth provides the email
+  confirmation flow out of the box.
+- **Password reset:** "Forgot Password?" uses Supabase Auth's password-reset
+  email flow.
+- **Future options:** Email OTP / 6-digit verification codes may be added later
+  if needed.
+- **Out of scope for v1:** no SMS verification codes and no phone-number login.
+
+### Email delivery (planned)
+
+- Production requires a **Custom SMTP** provider.
+- Supabase's built-in/default email service is for development and testing only
+  and is not suitable for sending production user email.
+- Email sending costs depend on the final SMTP provider chosen; no specific
+  third-party provider is committed to as permanently free.
+
 ## Recipe Management
 
 Each recipe belongs to exactly one authenticated user and contains:

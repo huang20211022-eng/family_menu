@@ -38,6 +38,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get registrationComingSoon => '注册功能将在下一阶段接入。';
+
+  @override
+  String get forgotPassword => '忘记密码？';
+
+  @override
+  String get passwordResetComingSoon => '密码重置功能将在下一阶段开放。';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -73,4 +79,10 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get registrationComingSoon => '注册功能将在下一阶段接入。';
+
+  @override
+  String get forgotPassword => '忘记密码？';
+
+  @override
+  String get passwordResetComingSoon => '密码重置功能将在下一阶段开放。';
 }

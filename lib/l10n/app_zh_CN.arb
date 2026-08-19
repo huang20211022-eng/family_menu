@@ -9,5 +9,7 @@
   "signIn": "登录",
   "createAccount": "注册账号",
   "authComingSoon": "登录功能将在下一阶段接入。",
-  "registrationComingSoon": "注册功能将在下一阶段接入。"
+  "registrationComingSoon": "注册功能将在下一阶段接入。",
+  "forgotPassword": "忘记密码？",
+  "passwordResetComingSoon": "密码重置功能将在下一阶段开放。"
 }
