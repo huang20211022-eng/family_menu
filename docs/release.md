@@ -44,11 +44,21 @@ application. Releases are distributed through three channels.
 - Store credentials in local, git-ignored configuration (e.g.
   `android/key.properties`) or CI secrets.
 
+## Cost Considerations
+
+- Releases rely on free tiers: Supabase free tier, Cloudflare R2 free tier, and
+  Cloudflare Workers free tier.
+- No fixed monthly-fee services are introduced.
+- Before any service approaches its free-tier limit, the cost is reported and
+  approved — never auto-upgrade to a paid tier automatically.
+
 ## Release Checklist (planned)
 
 1. Increment `version` in `pubspec.yaml` and update `CHANGELOG.md`.
 2. Run `flutter analyze` and `flutter test`.
 3. Build the artifact (`apk` and/or `appbundle`).
 4. Verify the artifact on the Pixel 8 (API 36) emulator/device.
-5. Sign with the release key.
-6. Publish to the target channel and attach the signed artifact.
+5. Verify no secrets (Supabase service-role key, R2/Worker secrets) are bundled.
+6. Verify recipe image upload/download via Cloudflare R2 (secure temp URLs).
+7. Sign with the release key.
+8. Publish to the target channel and attach the signed artifact.

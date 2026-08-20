@@ -62,7 +62,7 @@ Each recipe belongs to exactly one authenticated user and contains:
 
 | Field             | Required | Notes                                  |
 |-------------------|----------|----------------------------------------|
-| Recipe image      | Required | Stored in Supabase Storage             |
+| Recipe image      | Required | Stored in Cloudflare R2                |
 | Recipe name       | Required |                                        |
 | Ingredients       | Required | Preserved verbatim (user data)         |
 | Cooking steps     | Required | Preserved verbatim (user data)         |
@@ -102,6 +102,8 @@ an empty/broken element — it is simply omitted.
 
 - A "今天吃什么？" / "What should we eat?" button randomly selects one recipe
   from the current user's collection.
+- The selection uses a **100% local random algorithm** — the normal user flow
+  never calls an LLM (e.g. DeepSeek) or any external AI service.
 - The UI eventually includes a visually interesting drawing/rolling animation.
 - If the user has no recipes, show a useful empty state that guides them to
   create their first recipe.
@@ -124,11 +126,15 @@ Centralized localization via Flutter's official `l10n`/ARB mechanism
 (`flutter gen-l10n`). No user-facing strings are hard-coded in widgets.
 See [`docs/localization.md`](docs/localization.md) for details.
 
-## Planned Supabase Architecture
+## Planned Backend Architecture
 
 - **Supabase Auth** — registration, login, session persistence.
-- **PostgreSQL** — the `recipes` table and metadata.
-- **Supabase Storage** — recipe images (the DB stores only the path/URL).
+- **Supabase PostgreSQL** — recipe metadata only (`recipes` table). The database
+  stores **no recipe image binary data**.
+- **Cloudflare R2** — recipe image storage, used from the first version (v1).
+  The database stores only the R2 `image_key` / `image_path`.
+- **Cloudflare Worker** — generates secure, temporary URLs for R2 image upload
+  and download. No traditional VPS or self-hosted server is used.
 - **Row Level Security (RLS)** — always enabled; a user can only read, create,
   update, and delete their own recipes.
 
@@ -143,7 +149,7 @@ The planned `recipes` table:
 | `id`         | UUID (PK)             | Recipe identifier              |
 | `user_id`    | UUID (FK → auth.users)| Owning authenticated user      |
 | `name`       | text                  | NOT NULL                       |
-| `image_url`  | text                  | NOT NULL — Storage path/URL    |
+| `image_key`  | text                  | NOT NULL — R2 object key/path  |
 | `ingredients`| text / jsonb          | NOT NULL — preserved verbatim  |
 | `steps`      | text / jsonb          | NOT NULL — preserved verbatim  |
 | `video_url`  | text                  | NULLABLE                       |
@@ -159,9 +165,36 @@ The planned `recipes` table:
 
 - No secrets in source code; never commit keys, service-role keys, passwords,
   or tokens.
-- Client config exposes only public credentials (anon key + project URL).
+- Client config exposes only public credentials (Supabase anon key + project
+  URL). Cloudflare R2 secrets and Worker secrets are never bundled in Flutter.
 - RLS stays enabled; ownership is enforced server-side, not just client-side.
-- Images are stored in Storage; the DB holds paths, not binary data.
+- Images are stored in Cloudflare R2; the DB holds the R2 object key, not
+  binary data and not long-lived public URLs.
+
+## Recipe Image Handling
+
+- Images are stored in Cloudflare R2; the database stores only the R2
+  `image_key` / `image_path`.
+- The Flutter client compresses images before upload and enforces maximum
+  dimensions and file-size limits.
+- The list view loads thumbnails; the detail page loads an appropriately sized
+  image.
+- Upload and download use secure, temporary URLs issued by a Cloudflare Worker.
+
+## AI / LLM Policy
+
+- **DeepSeek** is used only as the Claude Code model during development. It is
+  not part of the MVP's normal user flow.
+- The MVP user flow (browse, create, edit, delete, random draw) depends on
+  **no LLM / AI service** at runtime.
+
+## Cost Policy
+
+- Prefer free tiers (Supabase free tier, Cloudflare R2 free tier, Cloudflare
+  Workers free tier).
+- Do not introduce services with a fixed monthly fee.
+- Before any service exceeds its free tier, the cost must be reported and
+  approved — never auto-upgrade to a paid tier.
 
 ## Future Roadmap
 

@@ -19,6 +19,35 @@ The project is a Flutter Android application with application ID / namespace
 | Android Emulator | Run and visually inspect the app   |
 | Git / GitHub   | Version control                      |
 
+## External Services
+
+Backend work is split across managed services — no VPS or self-hosted server:
+
+| Service             | Purpose                               |
+|---------------------|---------------------------------------|
+| Supabase Auth       | Registration, login, session          |
+| Supabase PostgreSQL | Recipe metadata only (RLS)            |
+| Cloudflare R2       | Recipe image storage (DB stores key)  |
+| Cloudflare Worker   | Secure temporary upload/download URLs |
+
+No secrets (Supabase service-role key, R2 API token, Worker secrets) are ever
+written into Flutter source code or committed.
+
+## Image Handling
+
+- The client compresses images before upload and enforces maximum dimensions
+  and file-size limits.
+- The list view loads thumbnails; the detail page loads an appropriately sized
+  image.
+
+## AI & Cost Discipline
+
+- DeepSeek is the Claude Code model used during development only; the MVP
+  normal user flow depends on no LLM.
+- "What should we eat?" uses a 100% local random algorithm.
+- Prefer free tiers; do not introduce fixed monthly-fee services. Before any
+  service exceeds its free tier, stop and report the cost — never auto-upgrade.
+
 ## Android Emulator Test Device
 
 The reference test device is:

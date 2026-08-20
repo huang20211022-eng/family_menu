@@ -16,7 +16,9 @@ draw ("What should we eat?") from them.
 |------------|----------------------------------------------------------|
 | Client     | Flutter (Dart)                                           |
 | Platform   | Android (first target)                                   |
-| Backend    | Supabase — Auth, PostgreSQL, Storage (planned)           |
+| Backend    | Supabase — Auth, PostgreSQL (recipe metadata only)        |
+| Image storage | Cloudflare R2 (v1 onward; DB stores `image_key` only)  |
+| Secure URLs | Cloudflare Worker (temporary R2 upload/download URLs)   |
 | Localization | Flutter official `l10n` (ARB) mechanism (planned)        |
 
 The Android application ID / namespace is `com.menglan.family_menu`.
@@ -29,7 +31,7 @@ The Android application ID / namespace is `com.menglan.family_menu`.
     l10n/          # generated localization (planned)
     core/          # shared utilities, constants, theme, errors
     models/        # domain models (e.g. Recipe)
-    services/      # Supabase client wrappers (auth, storage, DB)
+    services/      # Supabase (auth, DB) + Cloudflare R2/Worker wrappers
     repositories/  # data access, single source of truth for pages
     pages/         # screen/widget pages
     widgets/       # reusable UI components
@@ -62,8 +64,28 @@ The Android application ID / namespace is `com.menglan.family_menu`.
   simply to make a feature work.
 - Each user may only read/create/update/delete their **own** recipes
   (enforced by RLS on `user_id = auth.uid()`).
-- Recipe images live in Supabase Storage; the database stores only the
-  image path/URL, never image binary data.
+- Recipe images live in Cloudflare R2; the database stores only the R2
+  `image_key` / `image_path`, never image binary data.
+- **Cloudflare R2 and Worker secrets must never be committed or written into
+  Flutter source code.** Upload/download uses secure temporary URLs from a
+  Cloudflare Worker.
+
+## Image & Cost Rules
+
+- Images are stored in Cloudflare R2; the DB stores only `image_key`/`image_path`.
+- The client compresses images before upload and enforces max dimensions and
+  file-size limits; the list uses thumbnails and the detail page uses an
+  appropriately sized image.
+- Prefer free tiers (Supabase, Cloudflare R2, Cloudflare Workers). Do not
+  introduce fixed monthly-fee services. Before any service exceeds its free
+  tier, stop and report the cost for approval — never auto-upgrade to paid.
+
+## AI Rules
+
+- DeepSeek is the Claude Code model used during development only. The MVP
+  normal user flow must not depend on any LLM.
+- "What should we eat?" uses a 100% local random algorithm — never call an LLM
+  for the random-recipe flow.
 
 ## Localization Rules
 
